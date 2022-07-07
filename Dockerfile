@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu20.04 as BASE
+FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu20.04 AS base
 
 ENV TZ=America/Sao_Paulo
 ENV DEBIAN_FRONTEND=noninteractive
@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install --no-install-recommends --no-install-sugge
     && rm -rf /var/lib/apt/lists/*
 
 # create user, configure and install pyenv
-FROM BASE as WITH_USER
+FROM base AS with_user
 ARG UNAME
 ARG UID
 ARG GID
@@ -34,14 +34,14 @@ RUN curl https://pyenv.run | bash
 
 
 # download, compile and configure python
-FROM WITH_USER as WITH_PYTHON
+FROM with_user AS with_python
 ARG PYTHON_VERSION
 RUN CONFIGURE_OPTS="--enable-optimizations --with-lto" pyenv install $PYTHON_VERSION
 RUN pyenv global $PYTHON_VERSION
 
 
 # create project dir and change its owner
-FROM WITH_PYTHON as WITH_PYTHON_REQUIREMENTS
+FROM with_python AS with_python_requirements
 ENV JUPYTER_LAB_DIR=/jupyterlab
 USER root
 RUN mkdir $JUPYTER_LAB_DIR && chown -R $UID:$GID $JUPYTER_LAB_DIR

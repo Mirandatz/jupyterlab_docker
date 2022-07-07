@@ -1,4 +1,9 @@
-#!/bin/bash -x
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+set -o xtrace
 
 # we must use absolute paths because we want to mount them on containers
 SCRIPT_PATH=$(realpath "${BASH_SOURCE[0]}")
@@ -11,11 +16,11 @@ GID="$(id -g)"
 UNAME="$(whoami)"
 
 PYTHON_VERSION="3.10.4"
-JUPORT=12344
+JUPORT=13130
 
 # build container, if necessary
 export DOCKER_BUILDKIT=1
-ENV_TAG="mirandatz/jupyterlab:cerri"
+ENV_TAG="mirandatz/jupyterlab:bioinfo03"
 docker build \
     -f Dockerfile \
     --build-arg HOME="/jupyterlab" \
