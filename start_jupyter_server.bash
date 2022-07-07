@@ -11,9 +11,9 @@ DIR_PATH=$(dirname "$SCRIPT_PATH")
 echo "$DIR_PATH"
 
 # used to ensure files/directories are created with the correct user:group
-UID="$(id -u)"
-GID="$(id -g)"
-UNAME="$(whoami)"
+USER_ID="$(id -u)"
+GROUP_ID="$(id -g)"
+USER_NAME="$(whoami)"
 
 PYTHON_VERSION="3.10.4"
 JUPORT=13130
@@ -24,9 +24,9 @@ ENV_TAG="mirandatz/jupyterlab:bioinfo03"
 docker build \
     -f Dockerfile \
     --build-arg HOME="/jupyterlab" \
-    --build-arg UNAME="$UNAME" \
-    --build-arg UID="$UID" \
-    --build-arg GID="$GID" \
+    --build-arg USER_NAME="$USER_NAME" \
+    --build-arg USER_ID="$USER_ID" \
+    --build-arg GROUP_ID="$GROUP_ID" \
     --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
     -t "$ENV_TAG" .
 
@@ -37,7 +37,7 @@ mkdir -p jupyterlab_storage
 docker run \
     --rm \
     --runtime nvidia \
-    --user "$UID":"$GID" \
+    --user "$USER_ID":"$GROUP_ID" \
     -v "${DIR_PATH}/jupyterlab_storage":/jupyterlab/storage \
     -p "$JUPORT":"$JUPORT" \
     --workdir /jupyterlab/storage \

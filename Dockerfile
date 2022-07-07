@@ -20,13 +20,13 @@ RUN apt-get update && apt-get install --no-install-recommends --no-install-sugge
 
 # create user, configure and install pyenv
 FROM base AS with_user
-ARG UNAME
-ARG UID
-ARG GID
-RUN groupadd --gid $GID $UNAME
-RUN useradd --create-home --uid $UID --gid $GID --shell /bin/bash $UNAME
-USER $UNAME
-ENV PYENV_ROOT /home/$UNAME/.pyenv
+ARG USER_NAME
+ARG USER_ID
+ARG GROUP_ID
+RUN groupadd --gid $GROUP_ID $USER_NAME
+RUN useradd --create-home --uid $USER_ID --gid $GROUP_ID --shell /bin/bash $USER_NAME
+USER $USER_NAME
+ENV PYENV_ROOT /home/$USER_NAME/.pyenv
 ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
 
 SHELL ["/bin/bash", "-c"]
@@ -41,11 +41,11 @@ RUN pyenv global $PYTHON_VERSION
 
 
 # create project dir and change its owner
-FROM with_python AS with_python_requirements
+FROM with_python
 ENV JUPYTER_LAB_DIR=/jupyterlab
 USER root
-RUN mkdir $JUPYTER_LAB_DIR && chown -R $UID:$GID $JUPYTER_LAB_DIR
-USER $UNAME
+RUN mkdir $JUPYTER_LAB_DIR && chown -R $USER_ID:$GROUP_ID $JUPYTER_LAB_DIR
+USER $USER_NAME
 
 ENV VIRTUAL_ENV=${JUPYTER_LAB_DIR}/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
