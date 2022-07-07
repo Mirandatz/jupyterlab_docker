@@ -44,4 +44,4 @@ docker run \
     --env HOME="/jupyterlab/storage/" \
     "$ENV_TAG" \
     /bin/bash -c \
-    'jupyter lab --port="$JUPORT" --no-browser --ip=0.0.0.0'
+    'jupyter lab --port="$JUPORT" --no-browser --ip=0.0.0.0 --NotebookApp.token="" --NotebookApp.password=""'
