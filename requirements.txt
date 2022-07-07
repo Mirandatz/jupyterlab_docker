@@ -1,0 +1,7 @@
+ipywidgets
+jupyterlab
+matplotlib
+pandas
+sklearn
+tensorflow_datasets
+tensorflow-gpu
